@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lab1/screens/hello_screen.dart';
+import 'package:lab1/screens/schedule_screen.dart';
+import 'constants/groups.dart';
 
 void main() => runApp(const MyApp());
 
@@ -28,63 +29,31 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  String firstName = '';
-  String middleName = '';
-
+  String firstGroup = groupNames.first;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          TextFormField(
-            textAlign: TextAlign.center,
-            onChanged: (text) {
-              firstName = text;
-            },
-            decoration: const InputDecoration(
-              hintText: 'Enter your first name',
-            ),
-            validator: (String? value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your first name!';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            textAlign: TextAlign.center,
-            onChanged: (text) {
-              middleName = text;
-            },
-            decoration: const InputDecoration(
-              hintText: 'Enter your middle name',
-            ),
-            validator: (String? value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your middle name!';
-              }
-              return null;
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.all(0),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => HelloScreen(
-                          middleName: middleName,
-                          firstName: firstName,
-                        )));
-              },
-              child: const Text('Submit'),
-            ),
-          ),
-        ],
-      ),
+  Widget build(BuildContext con) {
+    return DropdownButton(
+      alignment: AlignmentDirectional.centerStart,
+      value: firstGroup,
+      items: groupNames.map((String groupName) {
+        return DropdownMenuItem(
+            value: groupName,
+            child: Text(
+              groupName,
+              textAlign: TextAlign.center,
+            ));
+      }).toList(),
+      onChanged: (String? value) {
+        setState(() {
+          firstGroup = value!;
+        });
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => ScheduleScreen(
+                  groupName: firstGroup,
+                )));
+      },
     );
   }
 }
