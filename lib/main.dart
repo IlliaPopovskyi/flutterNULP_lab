@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:lab1/screens/schedule_screen.dart';
-import 'constants/groups.dart';
+import 'package:lab1/screens/list_screen.dart';
+import 'package:lab1/services/persons.dart';
 
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  static const String _title = 'Input Screen';
+  static const String _title = 'Start Screen';
 
   @override
   Widget build(BuildContext context) {
@@ -29,31 +29,23 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  String firstGroup = groupNames.first;
+  final personService = PersonService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext con) {
-    return DropdownButton(
-      alignment: AlignmentDirectional.centerStart,
-      value: firstGroup,
-      items: groupNames.map((String groupName) {
-        return DropdownMenuItem(
-            value: groupName,
-            child: Text(
-              groupName,
-              textAlign: TextAlign.center,
-            ));
-      }).toList(),
-      onChanged: (String? value) {
-        setState(() {
-          firstGroup = value!;
-        });
+    return TextButton(
+      style: TextButton.styleFrom(
+        textStyle: const TextStyle(fontSize: 20),
+      ),
+      onPressed: () async {
+        var persons = await personService.getPersons();
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => ScheduleScreen(
-                  groupName: firstGroup,
+            builder: (context) => ListScreen(
+                  persons: persons,
                 )));
       },
+      child: const Text('Get persons'),
     );
   }
 }
